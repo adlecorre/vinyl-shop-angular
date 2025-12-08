@@ -23,7 +23,10 @@ export class ConnexionComponent {
     private router: Router,
     private authService: AuthService,
     private logService: LoginLogoutService
-  ){}
+  ){
+    const user = localStorage.getItem('user');
+    this.logService.isConnected(!!user);
+  }
 
   connexion(){
     this.authService.findUserByUsernameAndPassword(this.user).subscribe({
