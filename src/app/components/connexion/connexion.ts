@@ -23,7 +23,10 @@ export class ConnexionComponent {
     private router: Router,
     private authService: AuthService,
     private logService: LoginLogoutService
-  ){}
+  ){
+    const user = localStorage.getItem('user');
+    this.logService.isConnected(!!user);
+  }
 
   connexion(){
     this.authService.findUserByUsernameAndPassword(this.user).subscribe({
@@ -33,7 +36,7 @@ export class ConnexionComponent {
         localStorage.setItem('user', JSON.stringify(this.user))
         this.erreur.set(null)
         this.logService.isConnected(true)
-        // this.router.navigateByUrl('/catalogue')
+        this.router.navigateByUrl('/catalogue')
       },
       error: (err) => {
         console.log(err);
