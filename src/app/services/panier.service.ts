@@ -38,6 +38,7 @@ export class PanierService {
     this.subject.next(this.items);
   }
 
+  
   viderPanier() {
     this.items = [];
     this.subject.next(this.items);

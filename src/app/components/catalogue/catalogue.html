@@ -34,19 +34,16 @@
             <p class="text-secondary small">
               <i class="fa-solid fa-boxes-stacked me-1"></i>Stock : {{ v.stock }}
             </p>
-
-            
+         
            <button class="btn btn-primary w-100 mt-2 position-relative"
-        (click)="ajouterAuPanier(v)">
-  <i class="fa-solid fa-cart-shopping me-2"></i>
-  Ajouter au panier
-
-  @if (count > 0) {
-    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-      {{ count }}
-    </span>
-  }
-</button>
+              (click)="ajouterAuPanier(v)">
+            <i class="fa-solid fa-cart-shopping me-2"></i>Ajouter au panier
+                 
+            </button>
+            <button class="btn btn-outline-danger w-100 mt-2"(click)="retirerDuPanier(v)">
+                    <i class="fa-solid fa-minus me-2"></i>Retirer du panier
+            </button>
+            <button class="btn btn-primary w-100 mt-2 position-relative" [routerLink]="['/panier']">Voir Panier </button>
 
           </div>
         </div>
