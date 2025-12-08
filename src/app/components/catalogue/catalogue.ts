@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogueService } from '../../services/catalogue';
 import { FormsModule } from '@angular/forms';
+import { PanierService } from '../../services/panier.service';
+import { Subscription } from 'rxjs';
 
 export interface Vinyle {
   artiste_id: number;
@@ -19,14 +21,23 @@ export interface Vinyle {
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
+
 export class CatalogueComponent implements OnInit {
   vinyles = signal<Vinyle[]>([])
   erreur = signal<string | null>(null)
   titre = ''
+  count: number = 0;
+  subscription!: Subscription;
+
+  constructor(private panierService: PanierService){}
 
   cs = inject(CatalogueService)
   
   ngOnInit(): void {
+    // S'abonner aux changements du panier
+    this.subscription = this.panierService.panier$.subscribe(items => {
+      this.count = items.length;
+    });
     this.cs.findAll().subscribe({
       next: (res) => {
         console.log(res);
@@ -50,5 +61,13 @@ export class CatalogueComponent implements OnInit {
         console.log(err);
       }
     })
+  }
+
+  ajouterAuPanier(vinyle: Vinyle) {
+    this.panierService.ajouter(vinyle);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

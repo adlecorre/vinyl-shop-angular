@@ -1,0 +1,78 @@
+<div class="card shadow p-4">
+
+  <h3 class="mb-4">
+    <i class="fa-solid fa-cart-shopping me-2"></i>Votre Panier
+  </h3>
+
+  <!-- Panier vide -->
+  @if (items.length === 0) {
+    <div class="text-center text-muted py-4">
+      <i class="fa-solid fa-bag-shopping fa-3x mb-3"></i>
+      <p class="fs-5">Votre panier est vide pour l'instant.</p>
+    </div>
+  } @else {
+
+    <!-- Liste des articles -->
+    @for (item of items; track item.vinyle.id_vinyles) {
+
+      <div class="d-flex align-items-center mb-3 p-3 border rounded">
+
+        <!-- Image -->
+        <img [src]="item.vinyle.url_pochette"
+             [alt]="item.vinyle.titre"
+             class="rounded me-3"
+             style="width: 80px; height: 80px; object-fit: cover;">
+
+        <!-- Infos -->
+        <div class="flex-grow-1">
+          <h5 class="mb-1">{{ item.vinyle.titre }}</h5>
+          <p class="text-muted small mb-1">{{ item.vinyle.prix_vinyle }} € / unité</p>
+
+          <!-- Quantité -->
+          <div class="d-flex align-items-center">
+
+            <button class="btn btn-sm btn-outline-secondary"
+                    (click)="decrementer(item)">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+
+            <span class="mx-3 fw-bold">{{ item.qte }}</span>
+
+            <button class="btn btn-sm btn-outline-secondary"
+                    (click)="incrementer(item)">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Sous-total -->
+        <div class="text-end me-3">
+          <span class="fw-bold">{{ item.vinyle.prix_vinyle * item.qte | number:'1.2-2' }} €</span>
+        </div>
+
+        <!-- Supprimer -->
+        <button class="btn btn-sm btn-danger"
+                (click)="supprimer(item)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+      </div>
+    }
+
+    <!-- Total général -->
+    <div class="border-top pt-3 mt-3">
+      <h4 class="d-flex justify-content-between">
+        Total :
+        <span>{{ total() | number:'1.2-2' }} €</span>
+      </h4>
+
+      <button class="btn btn-danger w-100 mt-3"
+              (click)="vider()">
+        <i class="fa-solid fa-trash-can me-2"></i>Vider le panier
+      </button>
+    </div>
+
+  }
+
+</div>
