@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router'; 
 
 export interface Vinyle {
+  idVinyle: number;
   artiste_id: number;
   prixVinyle: number;
   stock: number;

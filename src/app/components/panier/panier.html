@@ -13,12 +13,12 @@
   } @else {
 
     <!-- Liste des articles -->
-    @for (item of items; track item.vinyle.id_vinyles) {
+    @for (item of items; track item.vinyle.idVinyle) {
 
       <div class="d-flex align-items-center mb-3 p-3 border rounded">
 
         <!-- Image -->
-        <img [src]="item.vinyle.url_pochette"
+        <img [src]="item.vinyle.urlPochette"
              [alt]="item.vinyle.titre"
              class="rounded me-3"
              style="width: 80px; height: 80px; object-fit: cover;">
@@ -26,7 +26,7 @@
         <!-- Infos -->
         <div class="flex-grow-1">
           <h5 class="mb-1">{{ item.vinyle.titre }}</h5>
-          <p class="text-muted small mb-1">{{ item.vinyle.prix_vinyle }} € / unité</p>
+          <p class="text-muted small mb-1">{{ item.vinyle.prixVinyle }} € / unité</p>
 
           <!-- Quantité -->
           <div class="d-flex align-items-center">
@@ -48,7 +48,7 @@
 
         <!-- Sous-total -->
         <div class="text-end me-3">
-          <span class="fw-bold">{{ item.vinyle.prix_vinyle * item.qte | number:'1.2-2' }} €</span>
+          <span class="fw-bold">{{ item.vinyle.prixVinyle * item.qte | number:'1.2-2' }} €</span>
         </div>
 
         <!-- Supprimer -->

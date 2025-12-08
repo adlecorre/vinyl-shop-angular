@@ -49,7 +49,7 @@ export class PanierComponent implements OnInit {
 
   total() {
     return this.items.reduce(
-      (sum, item) => sum + item.vinyle.prix_vinyle * item.qte,
+      (sum, item) => sum + item.vinyle.prixVinyle * item.qte,
       0
     );
   }

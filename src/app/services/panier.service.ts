@@ -14,7 +14,7 @@ export class PanierService {
   panier$ = this.subject.asObservable();
 
   ajouter(v: Vinyle) {
-    const found = this.items.find(i => i.vinyle.id_vinyles === v.id_vinyles);
+    const found = this.items.find(i => i.vinyle.idVinyle === v.idVinyle);
 
     if (found) {
       found.qte++;
@@ -26,7 +26,7 @@ export class PanierService {
   }
 
   changerQuantite(v: Vinyle, qte: number) {
-    const item = this.items.find(i => i.vinyle.id_vinyles === v.id_vinyles);
+    const item = this.items.find(i => i.vinyle.idVinyle === v.idVinyle);
     if (!item) return;
 
     item.qte = qte;
@@ -34,7 +34,7 @@ export class PanierService {
   }
 
   retirer(v: Vinyle) {
-    this.items = this.items.filter(i => i.vinyle.id_vinyles !== v.id_vinyles);
+    this.items = this.items.filter(i => i.vinyle.idVinyle !== v.idVinyle);
     this.subject.next(this.items);
   }
 
