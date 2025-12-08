@@ -33,7 +33,7 @@ export class ConnexionComponent {
         localStorage.setItem('user', JSON.stringify(this.user))
         this.erreur.set(null)
         this.logService.isConnected(true)
-        // this.router.navigateByUrl('/catalogue')
+        this.router.navigateByUrl('/catalogue')
       },
       error: (err) => {
         console.log(err);
