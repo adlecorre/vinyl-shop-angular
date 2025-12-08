@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PanierService } from '../../services/panier.service';
+import { Subscription } from 'rxjs';
 
 export interface Vinyle {
   artiste_id: number;
@@ -67,4 +69,23 @@ export class CatalogueComponent {
       url_pochette: 'https://exemple.com/racine-carree.jpg'
     }
   ];
+ count: number = 0;
+  subscription!: Subscription;
+
+  constructor(private panierService: PanierService) {}
+
+  ngOnInit() {
+    // S'abonner aux changements du panier
+    this.subscription = this.panierService.panier$.subscribe(items => {
+      this.count = items.length;
+    });
+  }
+
+  ajouterAuPanier(vinyle: Vinyle) {
+    this.panierService.ajouter(vinyle);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }
