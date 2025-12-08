@@ -1,0 +1,33 @@
+<h2 class="text-center mt-4">Connexion</h2>
+
+<div class="card shadow-sm mt-4 mx-auto" style="max-width: 350px;">
+  <div class="card-body">
+
+    <form (ngSubmit)="connexion()" #form="ngForm">
+      <div class="mb-3">
+        <label for="email" class="form-label">Adresse mail</label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="user.email" name="email" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="motDePasse" class="form-label">Mot de passe</label>
+        <input type="password" class="form-control" id="motDePasse" [(ngModel)]="user.motDePasse" name="motDePasse" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-30" [disabled]="form.invalid">
+        Se connecter
+      </button>
+    </form>
+
+    <div class="my-3">
+        <a routerLink="/inscription">S'inscrire</a>
+    </div>
+
+    @if (erreur()) {
+    <div class="alert alert-danger" role="alert">
+            {{ erreur() }}
+    </div>
+    }
+
+  </div>
+</div>
