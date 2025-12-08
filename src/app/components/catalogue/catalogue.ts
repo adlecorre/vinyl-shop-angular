@@ -4,7 +4,7 @@ import { CatalogueService } from '../../services/catalogue';
 import { FormsModule } from '@angular/forms';
 import { PanierService } from '../../services/panier.service';
 import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router'; 
+import { RouterLink, RouterModule } from '@angular/router'; 
 
 export interface Vinyle {
   idVinyle: number;
@@ -21,7 +21,7 @@ export interface Vinyle {
   templateUrl: './catalogue.html',
   styleUrls: ['./catalogue.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, RouterLink]
 })
 
 export class CatalogueComponent implements OnInit {
