@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanierService } from '../../services/panier.service'; 
 import { Vinyle } from '../catalogue/catalogue'; 
+import { RouterModule } from '@angular/router'; 
 
 interface PanierItem {
   vinyle: Vinyle;
@@ -11,7 +12,7 @@ interface PanierItem {
 @Component({
   selector: 'app-panier',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './panier.html',
 })
 export class PanierComponent implements OnInit {
