@@ -22,7 +22,7 @@ export class ProfilComponent implements OnInit {
   this.profilForm = this.fb.group({
     nom: [''],
     prenom: [''],
-    email: [''],
+    email: [{ value: '', disabled: true }],
     motDePasse: [''],
     adresse: [''],
     telephone: [''],
@@ -38,7 +38,7 @@ export class ProfilComponent implements OnInit {
         nom: user.nom,
         prenom: user.prenom,
         email: user.email,
-        motDePasse: user.motDePasse,
+        motDePasse: "",
         role: user.role,
         adresse: user.adresse,
         telephone: user.numTel,
@@ -51,14 +51,27 @@ export class ProfilComponent implements OnInit {
 
 
   onSubmit() {
-    if (this.profilForm.invalid) return;
+  if (this.profilForm.invalid) return;
 
-    const updatedUser = this.profilForm.getRawValue();
-    // this.userService.updateUser(this.currentUser.id, updatedUser).subscribe({
-    //   next: (res) => {
-    //     console.log('Utilisateur mis à jour', res);
-    //   },
-    //   error: (err) => console.error('Erreur update :', err)
-    // });
+  const formValues = this.profilForm.getRawValue();
+
+  const updatedUser: User = {
+    ...this.currentUser,
+    nom: formValues.nom,
+    prenom: formValues.prenom,
+    adresse: formValues.adresse,
+    numTel: formValues.telephone,
+    dateNaissance: formValues.date_naissance
+  };
+
+  if (formValues.motDePasse) {
+    updatedUser.motDePasse = formValues.motDePasse;
   }
+
+  this.userService.updateUser(this.currentUser.id!, updatedUser).subscribe({
+    next: (res) => console.log('Profil mis à jour', res),
+    error: (err) => console.error('Erreur update :', err)
+  });
+}
+
 }
