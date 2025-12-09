@@ -38,13 +38,18 @@
            <button class="btn btn-primary w-100 mt-2 position-relative"
               (click)="ajouterAuPanier(v)">
             <i class="fa-solid fa-cart-shopping me-2"></i>Ajouter au panier
-                 
+                  @if (v.quantite) {
+    <span class="badge bg-danger position-absolute top-0 end-0">
+      {{ v.quantite }}
+    </span>
+  }
             </button>
             <button class="btn btn-outline-danger w-100 mt-2"(click)="retirerDuPanier(v)">
                     <i class="fa-solid fa-minus me-2"></i>Retirer du panier
             </button>
-            <button class="btn btn-primary w-100 mt-2 position-relative" routerLink="['/panier']">Voir Panier </button>
-
+              <button class="btn btn-primary w-100 mt-2 position-relative" [routerLink]="['/panier']">
+              Voir Panier
+            </button>
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import { CatalogueService } from '../../services/catalogue';
 import { FormsModule } from '@angular/forms';
 import { PanierService } from '../../services/panier.service';
 import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 
 export interface Vinyle {
   idVinyle: number;
@@ -14,6 +14,7 @@ export interface Vinyle {
   titre: string;
   description: string;
   urlPochette: string;
+    quantite?: number; 
 }
 
 @Component({
@@ -21,7 +22,7 @@ export interface Vinyle {
   templateUrl: './catalogue.html',
   styleUrls: ['./catalogue.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule,RouterModule ]
 })
 
 export class CatalogueComponent implements OnInit {
@@ -65,12 +66,32 @@ export class CatalogueComponent implements OnInit {
     })
   }
 
+  //ajouterAuPanier(vinyle: Vinyle) {this.panierService.ajouter(vinyle); }
+//retirerDuPanier(vinyle: Vinyle) { this.panierService.retirer(vinyle);}
+  //
+ // ------------ PANIER ------------ //
+
   ajouterAuPanier(vinyle: Vinyle) {
+
+    if (!vinyle.quantite) {
+      vinyle.quantite = 0;
+    }
+
+    vinyle.quantite++;
+
+    // enregistrement dans le panier global
     this.panierService.ajouter(vinyle);
   }
-retirerDuPanier(vinyle: Vinyle) {
-  this.panierService.retirer(vinyle);
 
+  retirerDuPanier(vinyle: Vinyle) {
+
+    if (vinyle.quantite && vinyle.quantite > 0) {
+
+      vinyle.quantite--;
+
+      // retrait du panier global
+      this.panierService.retirer(vinyle);
+    }
   }
 
 

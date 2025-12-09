@@ -5,47 +5,53 @@
   </a>
 
   <ul class="navbar-nav flex-row ms-3">
+
     @if (logged) {
-    <li class="nav-item me-3">
-      <a class="nav-link" routerLink="/catalogue">
-        <i class="fa-solid fa-list me-1"></i>Catalogue
-      </a>
-    </li>
+      <li class="nav-item me-3">
+        <a class="nav-link" routerLink="/catalogue">
+          <i class="fa-solid fa-list me-1"></i>Catalogue
+        </a>
+      </li>
 
-    <li class="nav-item me-3">
-      <a class="nav-link" routerLink="/panier">
-        <i class="fa-solid fa-cart-shopping me-1"></i>Panier
-      </a>
-    </li>
+      <li class="nav-item me-3 position-relative">
+        <a class="nav-link" routerLink="/panier">
+          <i class="fa-solid fa-cart-shopping me-1"></i>Panier
 
-    <li class="nav-item me-3">
-      <a class="nav-link" routerLink="/profil">
-        <i class="fa-solid fa-id-badge me-1"></i>Profil
-      </a>
-    </li>
+          @if (totalArticles > 0) {
+            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
+              {{ totalArticles }}
+            </span>
+          }
+        </a>
+      </li>
 
-    <li class="nav-item cursor-pointer">
-      <a class="nav-link" (click)="logout()">
-        <i class="fa-solid fa-right-from-bracket me-1"></i>Déconnexion
-      </a>
-    </li>
+      <li class="nav-item me-3">
+        <a class="nav-link" routerLink="/profil">
+          <i class="fa-solid fa-id-badge me-1"></i>Profil
+        </a>
+      </li>
 
+      <li class="nav-item cursor-pointer">
+        <a class="nav-link" (click)="logout()">
+          <i class="fa-solid fa-right-from-bracket me-1"></i>Déconnexion
+        </a>
+      </li>
     }
 
     @if (!logged) {
-    @if (currentRoute === '/connexion') {
-    <li class="nav-item ms-3">
-      <a class="nav-link" routerLink="/inscription">
-        <i class="fa-solid fa-user-plus me-1"></i>Inscription
-      </a>
-    </li>
-    } @else if (currentRoute === '/inscription') {
-    <li class="nav-item ms-3">
-      <a class="nav-link" routerLink="/connexion">
-        <i class="fa-solid fa-user me-1"></i>Connexion
-      </a>
-    </li>
-    }
+      @if (currentRoute === '/connexion') {
+        <li class="nav-item ms-3">
+          <a class="nav-link" routerLink="/inscription">
+            <i class="fa-solid fa-user-plus me-1"></i>Inscription
+          </a>
+        </li>
+      } @else if (currentRoute === '/inscription') {
+        <li class="nav-item ms-3">
+          <a class="nav-link" routerLink="/connexion">
+            <i class="fa-solid fa-user me-1"></i>Connexion
+          </a>
+        </li>
+      }
     }
   </ul>
 </nav>
