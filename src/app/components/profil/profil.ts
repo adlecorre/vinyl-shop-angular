@@ -1,51 +1,88 @@
-import { Component } from '@angular/core';
+// profil.component.ts
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './profil.html',
   styleUrls: ['./profil.css']
 })
-export class ProfilComponent {
+export class ProfilComponent implements OnInit {
+  profilForm!: FormGroup;
+  currentUser!: User;
+  successMessage: string | null = null;
 
-  profilForm: FormGroup;
+  constructor(
+    private fb: FormBuilder, 
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  constructor(private fb: FormBuilder) {
-
-    // Simuler un utilisateur connecté
-    const user = {
-      id: 1,
-      nom: 'Dupont',
-      prenom: 'Jean',
-      email: 'jean.dupont@example.com',
-      telephone: '0123456789',
-      adresse: '12 rue de Paris, Paris',
-      date_naissance: '1985-04-12',
-      role: 'CLIENT',
-      password: 'pass123'
-    };
-
+  ngOnInit() {
     this.profilForm = this.fb.group({
-      nom: [user.nom, Validators.required],
-      prenom: [user.prenom, Validators.required],
-      email: [user.email, [Validators.required, Validators.email]],
-      telephone: [user.telephone],
-      adresse: [user.adresse],
-      date_naissance: [user.date_naissance, Validators.required],
-      password: [user.password, Validators.required], 
-      role: [{ value: user.role, disabled: true }] // non modifiable
+      nom: [''],
+      prenom: [''],
+      email: [{ value: '', disabled: true }],
+      motDePasse: [''],
+      adresse: [''],
+      telephone: [''],
+      date_naissance: [''],
+      role: [{ value: '', disabled: true }]
+    });
+
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        this.profilForm.patchValue({
+          nom: user.nom,
+          prenom: user.prenom,
+          email: user.email,
+          motDePasse: '',
+          role: user.role,
+          adresse: user.adresse,
+          telephone: user.numTel,
+          date_naissance: user.dateNaissance
+        });
+      },
+      error: (err) => console.error('Erreur récupération utilisateur :', err)
     });
   }
 
   onSubmit() {
     if (this.profilForm.invalid) return;
 
-    const updatedUser = this.profilForm.getRawValue();
-    console.log('Profil modifié :', updatedUser);
+    const formValues = this.profilForm.getRawValue();
+    const updatedUser: User = {
+      ...this.currentUser,
+      nom: formValues.nom,
+      prenom: formValues.prenom,
+      adresse: formValues.adresse,
+      numTel: formValues.telephone,
+      dateNaissance: formValues.date_naissance
+    };
 
-    // this.userService.update(updatedUser).subscribe(...)
+    if (formValues.motDePasse) {
+      updatedUser.motDePasse = formValues.motDePasse;
+    }
+
+    this.userService.updateUser(this.currentUser.id!, updatedUser).subscribe({
+      next: (res) => {
+        this.currentUser = res;
+        this.successMessage = 'Profil mis à jour avec succès !';
+        this.cdr.detectChanges(); 
+        
+        setTimeout(() => {
+          this.successMessage = null;
+          this.cdr.detectChanges(); 
+        }, 4000);
+      },
+      error: (err) => console.error('Erreur update :', err)
+    });
   }
 }
