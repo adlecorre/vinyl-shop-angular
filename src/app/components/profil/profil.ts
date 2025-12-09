@@ -1,51 +1,64 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule],
   templateUrl: './profil.html',
   styleUrls: ['./profil.css']
 })
-export class ProfilComponent {
+export class ProfilComponent implements OnInit {
+  profilForm!: FormGroup; 
+  currentUser!: User;
+  
+  constructor(private fb: FormBuilder, private userService: UserService) {}
+  
+  ngOnInit() {
+  // FormGroup vide
+  this.profilForm = this.fb.group({
+    nom: [''],
+    prenom: [''],
+    email: [''],
+    motDePasse: [''],
+    adresse: [''],
+    telephone: [''],
+    date_naissance: [''],
+    role: ['']
+  });
 
-  profilForm: FormGroup;
+  // Charger l'utilisateur depuis le service
+  this.userService.getCurrentUser().subscribe({
+    next: (user) => {
+      this.currentUser = user;
+      this.profilForm.patchValue({
+        nom: user.nom,
+        prenom: user.prenom,
+        email: user.email,
+        motDePasse: user.motDePasse,
+        role: user.role,
+        adresse: user.adresse,
+        telephone: user.numTel,
+        date_naissance: user.dateNaissance
+      });
+    },
+    error: (err) => console.error('Erreur récupération utilisateur :', err)
+  });
+}
 
-  constructor(private fb: FormBuilder) {
-
-    // Simuler un utilisateur connecté
-    const user = {
-      id: 1,
-      nom: 'Dupont',
-      prenom: 'Jean',
-      email: 'jean.dupont@example.com',
-      telephone: '0123456789',
-      adresse: '12 rue de Paris, Paris',
-      date_naissance: '1985-04-12',
-      role: 'CLIENT',
-      password: 'pass123'
-    };
-
-    this.profilForm = this.fb.group({
-      nom: [user.nom, Validators.required],
-      prenom: [user.prenom, Validators.required],
-      email: [user.email, [Validators.required, Validators.email]],
-      telephone: [user.telephone],
-      adresse: [user.adresse],
-      date_naissance: [user.date_naissance, Validators.required],
-      password: [user.password, Validators.required], 
-      role: [{ value: user.role, disabled: true }] // non modifiable
-    });
-  }
 
   onSubmit() {
     if (this.profilForm.invalid) return;
 
     const updatedUser = this.profilForm.getRawValue();
-    console.log('Profil modifié :', updatedUser);
-
-    // this.userService.update(updatedUser).subscribe(...)
+    // this.userService.updateUser(this.currentUser.id, updatedUser).subscribe({
+    //   next: (res) => {
+    //     console.log('Utilisateur mis à jour', res);
+    //   },
+    //   error: (err) => console.error('Erreur update :', err)
+    // });
   }
 }
