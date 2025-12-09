@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PanierService } from '../../services/panier.service';
 import { Subscription } from 'rxjs';
 import { RouterLink, RouterModule } from '@angular/router'; 
+import { PanierItem } from '../../panier-item';
 
 export interface Vinyle {
   idVinyle: number;
@@ -68,11 +69,14 @@ export class CatalogueComponent implements OnInit {
   ajouterAuPanier(vinyle: Vinyle) {
     this.panierService.ajouter(vinyle);
   }
-retirerDuPanier(vinyle: Vinyle) {
-  this.panierService.retirer(vinyle);
 
+  retirerDuPanier(vinyle: Vinyle) {
+    this.panierService.retirer(vinyle);
   }
 
+  panierContientVinyle(v: Vinyle){
+    return this.panierService.contientVinyle(v)
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

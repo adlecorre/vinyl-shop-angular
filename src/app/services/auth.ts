@@ -4,6 +4,7 @@ import { environment } from '../environments/environment.development';
 import { User } from '../models/user';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +27,15 @@ export class AuthService {
     };
     return this.http.post<any>(this.url, body);
   }
+
+  isExpired(token: string): Boolean {
+    const decoded = jwtDecode(token);
+    return Math.round(Date.now() / 1000) > (decoded.exp ?? 1)
+  }
   
   get currentUser() {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
+  
 }

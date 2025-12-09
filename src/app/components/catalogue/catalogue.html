@@ -16,6 +16,11 @@
     </div>
 </div>
 
+<div class="container mb-5 col-md-2">
+   <button class="btn btn-primary w-100 mt-2 position-relative" [routerLink]="['/panier']">Voir Panier </button>
+
+</div>
+
   <div class="row g-4">
     <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let v of vinyles()">
       <div class="card h-100 shadow-sm">
@@ -38,12 +43,13 @@
            <button class="btn btn-primary w-100 mt-2 position-relative"
               (click)="ajouterAuPanier(v)">
             <i class="fa-solid fa-cart-shopping me-2"></i>Ajouter au panier
+            </button>
                  
-            </button>
-            <button class="btn btn-outline-danger w-100 mt-2"(click)="retirerDuPanier(v)">
+            @if (panierContientVinyle(v)) {
+              <button class="btn btn-outline-danger w-100 mt-2"(click)="retirerDuPanier(v)">
                     <i class="fa-solid fa-minus me-2"></i>Retirer du panier
-            </button>
-            <button class="btn btn-primary w-100 mt-2 position-relative" [routerLink]="['/panier']">Voir Panier </button>
+              </button>
+            }
 
           </div>
         </div>

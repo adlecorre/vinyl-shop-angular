@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Route, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoginLogoutService } from '../../../services/login-logout';
+import { PanierService } from '../../../services/panier.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +16,7 @@ export class NavbarComponent {
   currentRoute: string = '';
   logged = false;
 
-  constructor(public logService: LoginLogoutService, private router: Router) {
+  constructor(public logService: LoginLogoutService, private router: Router, private panierService: PanierService) {
 
     this.logService.getSubject().subscribe(state => {
       this.logged = state;
@@ -35,6 +36,7 @@ export class NavbarComponent {
     localStorage.removeItem('user');
     localStorage.removeItem('tokens');
     this.logService.isConnected(false);
+    this.panierService.viderPanier()
     this.router.navigateByUrl('/connexion');
   }
 

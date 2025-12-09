@@ -5,11 +5,13 @@ import { ConnexionComponent } from './components/connexion/connexion';
 import { InscriptionComponent } from './components/inscription/inscription';
 import { ProfilComponent } from './components/profil/profil';
 import { authGuard } from './guards/auth-guard';
+import { CommandesComponent } from './components/commandes/commandes';
 
 export const routes: Routes = [
     { path: 'connexion', component: ConnexionComponent},
     { path: 'inscription', component: InscriptionComponent},
     { path: 'catalogue', component: CatalogueComponent, canActivate: [authGuard]},
     { path: 'profil', component: ProfilComponent, canActivate: [authGuard]},
-    { path: 'panier', component: PanierComponent, canActivate: [authGuard]}
+    { path: 'panier', component: PanierComponent, canActivate: [authGuard]},
+    { path: 'commandes', component: CommandesComponent, canActivate: [authGuard]}
 ];
