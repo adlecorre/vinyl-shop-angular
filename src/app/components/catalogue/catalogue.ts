@@ -15,6 +15,7 @@ export interface Vinyle {
   titre: string;
   description: string;
   urlPochette: string;
+    quantite?: number; 
 }
 
 @Component({
@@ -66,12 +67,32 @@ export class CatalogueComponent implements OnInit {
     })
   }
 
+  //ajouterAuPanier(vinyle: Vinyle) {this.panierService.ajouter(vinyle); }
+//retirerDuPanier(vinyle: Vinyle) { this.panierService.retirer(vinyle);}
+  //
+ // ------------ PANIER ------------ //
+
   ajouterAuPanier(vinyle: Vinyle) {
+
+    if (!vinyle.quantite) {
+      vinyle.quantite = 0;
+    }
+
+    vinyle.quantite++;
+
+    // enregistrement dans le panier global
     this.panierService.ajouter(vinyle);
   }
 
   retirerDuPanier(vinyle: Vinyle) {
-    this.panierService.retirer(vinyle);
+
+    if (vinyle.quantite && vinyle.quantite > 0) {
+
+      vinyle.quantite--;
+
+      // retrait du panier global
+      this.panierService.retirer(vinyle);
+    }
   }
 
   panierContientVinyle(v: Vinyle){
