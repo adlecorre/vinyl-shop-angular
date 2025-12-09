@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Route, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoginLogoutService } from '../../../services/login-logout';
 import { PanierService } from '../../../services/panier.service';
@@ -47,6 +47,7 @@ export class NavbarComponent {
     localStorage.removeItem('user');
     localStorage.removeItem('tokens');
     this.logService.isConnected(false);
+    this.panierService.viderPanier()
     this.router.navigateByUrl('/connexion');
   }
 }

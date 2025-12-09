@@ -4,7 +4,8 @@ import { CatalogueService } from '../../services/catalogue';
 import { FormsModule } from '@angular/forms';
 import { PanierService } from '../../services/panier.service';
 import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router'; 
+import { PanierItem } from '../../panier-item';
 
 export interface Vinyle {
   idVinyle: number;
@@ -22,7 +23,7 @@ export interface Vinyle {
   templateUrl: './catalogue.html',
   styleUrls: ['./catalogue.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule ]
+  imports: [CommonModule, FormsModule, RouterLink]
 })
 
 export class CatalogueComponent implements OnInit {
@@ -94,6 +95,9 @@ export class CatalogueComponent implements OnInit {
     }
   }
 
+  panierContientVinyle(v: Vinyle){
+    return this.panierService.contientVinyle(v)
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
