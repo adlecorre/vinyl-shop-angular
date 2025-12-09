@@ -18,9 +18,9 @@ export abstract class GenericService<T> {
         return this.http.get<T>(`${environment.BACKEND_URL}${this.path}/${id}`)
     }
 
-    // save(obj: T): Observable<T> {
-    //     return this.http.post<T>(environment.BACKEND_URL + this.path, obj)
-    // }
+    save(obj: T): Observable<T> {
+        return this.http.post<T>(environment.BACKEND_URL + this.path, obj)
+    }
 
     // update(id: number, obj: T): Observable<T> {
     //     return this.http.put<T>(`${environment.BACKEND_URL}${this.path}/${id}`, obj)

@@ -4,6 +4,10 @@ import { PanierService } from '../../services/panier.service';
 import { Vinyle } from '../catalogue/catalogue'; 
 import { RouterModule } from '@angular/router'; 
 import { PanierItem } from '../../panier-item';
+import { CommandeService } from '../../services/commande';
+import { Commande } from '../../models/commande';
+import { LigneCommande } from '../../models/ligne-commande';
+import { LigneCommandeService } from '../../services/ligne-commande';
 
 @Component({
   selector: 'app-panier',
@@ -14,8 +18,10 @@ import { PanierItem } from '../../panier-item';
 export class PanierComponent implements OnInit {
 
   items: PanierItem[] = []
+  commande: Commande | null = null
+  lignesCommande: LigneCommande[] = []
 
-  constructor(private panierService: PanierService) {
+  constructor(private panierService: PanierService,  private commandeService: CommandeService, private ligneService: LigneCommandeService) {
     this.items = panierService.recupererPanier()
   }
 
@@ -54,5 +60,19 @@ export class PanierComponent implements OnInit {
       (sum, item) => sum + item.vinyle.prixVinyle * item.qte,
       0
     );
+  }
+
+  commander(){
+    // Construction de la commande à l'aide des lignes de commande
+    this.items.forEach(item => {
+      const ligneCommande = {quantite: item.qte, commande: this.commande, vinyle: item.vinyle}
+      this.ligneService.save(ligneCommande)
+    });
+
+    // Création de la commande
+
+    // Vide le panier
+    this.vider()
+
   }
 }
