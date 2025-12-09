@@ -1,77 +1,88 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+// profil.component.ts
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user';
-import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './profil.html',
   styleUrls: ['./profil.css']
 })
 export class ProfilComponent implements OnInit {
-  profilForm!: FormGroup; 
+  profilForm!: FormGroup;
   currentUser!: User;
-  
-  constructor(private fb: FormBuilder, private userService: UserService) {}
-  
+  successMessage: string | null = null;
+
+  constructor(
+    private fb: FormBuilder, 
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
   ngOnInit() {
-  // FormGroup vide
-  this.profilForm = this.fb.group({
-    nom: [''],
-    prenom: [''],
-    email: [{ value: '', disabled: true }],
-    motDePasse: [''],
-    adresse: [''],
-    telephone: [''],
-    date_naissance: [''],
-    role: ['']
-  });
+    this.profilForm = this.fb.group({
+      nom: [''],
+      prenom: [''],
+      email: [{ value: '', disabled: true }],
+      motDePasse: [''],
+      adresse: [''],
+      telephone: [''],
+      date_naissance: [''],
+      role: [{ value: '', disabled: true }]
+    });
 
-  // Charger l'utilisateur depuis le service
-  this.userService.getCurrentUser().subscribe({
-    next: (user) => {
-      this.currentUser = user;
-      this.profilForm.patchValue({
-        nom: user.nom,
-        prenom: user.prenom,
-        email: user.email,
-        motDePasse: "",
-        role: user.role,
-        adresse: user.adresse,
-        telephone: user.numTel,
-        date_naissance: user.dateNaissance
-      });
-    },
-    error: (err) => console.error('Erreur récupération utilisateur :', err)
-  });
-}
-
-
-  onSubmit() {
-  if (this.profilForm.invalid) return;
-
-  const formValues = this.profilForm.getRawValue();
-
-  const updatedUser: User = {
-    ...this.currentUser,
-    nom: formValues.nom,
-    prenom: formValues.prenom,
-    adresse: formValues.adresse,
-    numTel: formValues.telephone,
-    dateNaissance: formValues.date_naissance
-  };
-
-  if (formValues.motDePasse) {
-    updatedUser.motDePasse = formValues.motDePasse;
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        this.profilForm.patchValue({
+          nom: user.nom,
+          prenom: user.prenom,
+          email: user.email,
+          motDePasse: '',
+          role: user.role,
+          adresse: user.adresse,
+          telephone: user.numTel,
+          date_naissance: user.dateNaissance
+        });
+      },
+      error: (err) => console.error('Erreur récupération utilisateur :', err)
+    });
   }
 
-  this.userService.updateUser(this.currentUser.id!, updatedUser).subscribe({
-    next: (res) => console.log('Profil mis à jour', res),
-    error: (err) => console.error('Erreur update :', err)
-  });
-}
+  onSubmit() {
+    if (this.profilForm.invalid) return;
 
+    const formValues = this.profilForm.getRawValue();
+    const updatedUser: User = {
+      ...this.currentUser,
+      nom: formValues.nom,
+      prenom: formValues.prenom,
+      adresse: formValues.adresse,
+      numTel: formValues.telephone,
+      dateNaissance: formValues.date_naissance
+    };
+
+    if (formValues.motDePasse) {
+      updatedUser.motDePasse = formValues.motDePasse;
+    }
+
+    this.userService.updateUser(this.currentUser.id!, updatedUser).subscribe({
+      next: (res) => {
+        this.currentUser = res;
+        this.successMessage = 'Profil mis à jour avec succès !';
+        this.cdr.detectChanges(); 
+        
+        setTimeout(() => {
+          this.successMessage = null;
+          this.cdr.detectChanges(); 
+        }, 4000);
+      },
+      error: (err) => console.error('Erreur update :', err)
+    });
+  }
 }
