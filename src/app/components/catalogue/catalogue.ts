@@ -46,6 +46,7 @@ export class CatalogueComponent implements OnInit {
       next: (res) => {
         console.log(res);
         this.vinyles.set(res)
+        this.synchroniserQuantites();
       },
       error: (err) => {
         this.erreur.set("Problème de récupération des données.")
@@ -102,4 +103,21 @@ export class CatalogueComponent implements OnInit {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
+private synchroniserQuantites() {
+  const itemsPanier = this.panierService.getPanier();
+
+  this.vinyles.update(vinyles =>
+    vinyles.map(v => {
+      const item = itemsPanier.find(i => i.vinyle.idVinyle === v.idVinyle);
+
+      return {
+        ...v,
+        quantite: item ? item.qte : 0
+      };
+    })
+  );
+}
+
+
 }
