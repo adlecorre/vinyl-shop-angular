@@ -33,30 +33,52 @@
                     <p class="card-text small text-muted">{{ v.description }}</p>
 
                     <div class="mt-auto">
+
+                        <!-- Prix -->
                         <p class="fw-bold mb-1">
                             <i class="fa-solid fa-tag me-1"></i>{{ v.prixVinyle }} €
                         </p>
 
+                        <!-- Stock restant -->
                         <p class="text-secondary small">
-                            <i class="fa-solid fa-boxes-stacked me-1"></i>Stock : {{ v.stock }}
+                            <i class="fa-solid fa-boxes-stacked me-1"></i>
+                            Stock : {{ v.stock - (v.quantite || 0) }}
                         </p>
 
-                        <button class="btn btn-primary w-100 mt-2 position-relative" (click)="ajouterAuPanier(v)">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>Ajouter au panier
-                            @if (v.quantite) {
-                            <span class="badge bg-danger position-absolute top-0 end-0">
-                                {{ v.quantite }}
-                            </span>
-                            }
-                        </button>
-                        @if (panierContientVinyle(v)) {
-                        <button class="btn btn-outline-danger w-100 mt-2" (click)="retirerDuPanier(v)">
-                            <i class="fa-solid fa-minus me-2"></i>Retirer du panier
+                        <!-- Ajout si pas encore dans le panier -->
+                        @if (!v.quantite || v.quantite === 0) {
+                        <button class="btn btn-primary w-100 mt-2" (click)="ajouterAuPanier(v)"
+                            [disabled]="v.stock === 0">
+                            <i class="fa-solid fa-cart-shopping me-2"></i>
+                            Ajouter au panier
                         </button>
                         }
 
-                       
+                        <!-- Compteur si déjà présent -->
+                        @if (v.quantite && v.quantite > 0) {
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+
+                            <!-- Bouton - -->
+                            <button class="btn btn-outline-danger" style="width: 3rem" (click)="retirerDuPanier(v)">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+
+                            <!-- Quantité -->
+                            <span class="fw-bold mx-3 fs-5">
+                                {{ v.quantite }}
+                            </span>
+
+                            <!-- Bouton + -->
+                            <button class="btn btn-primary" style="width: 3rem" (click)="ajouterAuPanier(v)"
+                                [disabled]="v.quantite >= v.stock">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+
+                        </div>
+                        }
+
                     </div>
+
                 </div>
 
             </div>
