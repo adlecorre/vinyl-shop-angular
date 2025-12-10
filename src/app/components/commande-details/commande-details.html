@@ -1,0 +1,17 @@
+<div class="card shadow p-4">
+
+  <h3 class="mb-4">
+    <i class="fa-solid fa-truck me-2"></i>Détails de la commande n°{{ commandeId }}
+  </h3>
+
+  <div class="container">
+    <ul>
+        @for (l of lignes(); track $index) {
+            <li><b>{{ vinyles()[$index]?.titre }}</b> ({{ vinyles()[$index].prixVinyle }}€) - Quantité: {{ l.quantite }}</li>
+        }
+    </ul>
+    <b>Total: </b> {{ calculerTotal() }}€
+  </div>
+
+</div>
+

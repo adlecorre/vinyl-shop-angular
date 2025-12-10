@@ -6,6 +6,7 @@ import { InscriptionComponent } from './components/inscription/inscription';
 import { ProfilComponent } from './components/profil/profil';
 import { authGuard } from './guards/auth-guard';
 import { CommandesComponent } from './components/commandes/commandes';
+import { CommandeDetailsComponent } from './components/commande-details/commande-details';
 
 export const routes: Routes = [
     { path: 'connexion', component: ConnexionComponent},
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'catalogue', component: CatalogueComponent, canActivate: [authGuard]},
     { path: 'profil', component: ProfilComponent, canActivate: [authGuard]},
     { path: 'panier', component: PanierComponent, canActivate: [authGuard]},
-    { path: 'commandes', component: CommandesComponent, canActivate: [authGuard]}
+    { path: 'commandes', component: CommandesComponent, canActivate: [authGuard]},
+    { path: 'detail/:id', component: CommandeDetailsComponent, canActivate: [authGuard]}
 ];

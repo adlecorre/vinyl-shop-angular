@@ -4,8 +4,7 @@
     <i class="fa-solid fa-truck me-2"></i>Mes commandes
   </h3>
 
-  <!-- Panier vide -->
-  @if (commandes.length === 0) {
+  @if (commandes().length == 0) {
     <div class="text-center text-muted py-4">
       <i class="fa-regular fa-face-frown fa-3x mb-3"></i>
       <p class="fs-5">Vous n'avez pas encore passé de commande.</p>
@@ -15,6 +14,25 @@
       </button>
     </div>
     </div>
+  }@else{
+    @for (commande of commandes(); track $index) {
+      <div class="container my-3">
+        <h3>Commande n°{{ commande.idCommande }} </h3>
+        <div>
+          Effectuée le {{ commande.dateCommande }}
+        </div>
+        @if (commande.statutCommande == "CONFIRMEE") {
+          <span class="badge bg-success">Statut: {{ commande.statutCommande }}</span>
+        }@else if (commande.statutCommande == "EN_ATTENTE") {
+          <span class="badge bg-primary">Statut: {{ commande.statutCommande }}</span>
+        }@else {
+          <span class="badge bg-danger">Statut: {{ commande.statutCommande }}</span>
+        }
+        <div class="my-2">
+          <a [routerLink]="['/detail', commande.idCommande]">Voir détails</a>
+        </div>
+      </div>
+    }
   }
 
 </div>
