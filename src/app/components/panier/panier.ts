@@ -10,6 +10,7 @@ import { UserService } from '../../services/user';
 import { Commande } from '../../models/commande';
 import { User } from '../../models/user';
 import { LigneCommande } from '../../models/ligne-commande';
+import { CatalogueService } from '../../services/catalogue';
 
 @Component({
   selector: 'app-panier',
@@ -22,7 +23,7 @@ export class PanierComponent implements OnInit {
   items: PanierItem[] = []
   commande: Commande | null = null
 
-  constructor(private panierService: PanierService, private ligneService: LigneCommandeService, private commandeService: CommandeService, private userService: UserService) {
+  constructor(private panierService: PanierService, private catalogueService:CatalogueService, private ligneService: LigneCommandeService, private commandeService: CommandeService, private userService: UserService) {
     this.items = panierService.recupererPanier()
 
     this.userService.getCurrentUser().subscribe({
@@ -43,8 +44,6 @@ export class PanierComponent implements OnInit {
     this.panierService.panier$.subscribe(items => {
       this.items = items;
     });
-    console.log(this.items);
-    
   }
 
   incrementer(item: PanierItem) {
@@ -84,7 +83,6 @@ export class PanierComponent implements OnInit {
 
     this.commandeService.save(this.commande).subscribe({
       next: (commandeCree) => {
-        console.log("Commande créée :", commandeCree);
 
         this.items.forEach(item => {
           const ligneCommande: LigneCommande = {
@@ -92,18 +90,19 @@ export class PanierComponent implements OnInit {
             idVinyle: item.vinyle.idVinyle,
             quantite: item.qte
           };
-          console.log("Ligne commande: " + JSON.stringify(ligneCommande));
-          console.log("Item: " + item);
-          
-          
 
           this.ligneService.save(ligneCommande).subscribe({
-            next: (lc) => console.log("Ligne OK :", lc),
+            next: (lc) => {
+              this.catalogueService.updateStock(item.vinyle.idVinyle, item.vinyle.stock - item.qte)
+              .subscribe({
+                next: v => console.log('Stock mis à jour', v),
+                error: err => console.error('Erreur mise à jour stock', err)
+              });
+            },
             error: (err) => console.error("Erreur ligne :", err)
           });
         });
 
-        // 3️⃣ vider le panier *après*
         this.vider();
       },
 

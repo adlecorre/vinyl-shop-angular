@@ -17,4 +17,8 @@ export class CatalogueService extends GenericService<Vinyle> {
     return this.http.get<Vinyle>(`${environment.BACKEND_URL}${this.path}/titre/${titre}`)
   }
 
+  updateStock(vinyleId: number, stock: number): Observable<Vinyle> {
+    return this.http.put<Vinyle>(`${environment.BACKEND_URL}${this.path}/${vinyleId}/stock`, stock);
+  }
+
 }
