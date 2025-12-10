@@ -66,4 +66,16 @@ export class PanierService {
   getPanier() {
     return this.items;
   }
+
+  retirerUn(v: Vinyle) {
+  const item = this.items.find(i => i.vinyle.idVinyle === v.idVinyle);
+  if (!item) return;
+
+  item.qte--;
+  if (item.qte <= 0) {
+    this.items = this.items.filter(i => i.vinyle.idVinyle !== v.idVinyle);
+  }
+  this.sauvegarderPanier();
+}
+
 }

@@ -1,87 +1,82 @@
 <div class="container my-4">
-    <h2 class="mb-4">
-        <i class="fa-solid fa-record-vinyl me-2"></i>Catalogue Vinyles
-    </h2>
+  <h2 class="mb-4">
+    <i class="fa-solid fa-record-vinyl me-2"></i>Catalogue Vinyles
+  </h2>
 
-    <div class="container my-3">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <form (ngSubmit)="chercher()" #form="ngForm">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="titre" [(ngModel)]="titre" name="titre"
-                            placeholder="Entrez le nom d'un vinyle..." required>
-                        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Recherche</button>
-                    </div>
-                </form>
+  <!-- Recherche -->
+  <div class="container my-3">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form (ngSubmit)="chercher()" #form="ngForm">
+          <div class="input-group mb-3">
+            <input 
+              type="text"
+              [(ngModel)]="titre"
+              (ngModelChange)="chercher()"
+              name="titre"
+              placeholder="Rechercher un vinyle..."
+              class="form-control mb-3"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton panier -->
+  <div class="container mb-5 col-md-2">
+    <button class="btn btn-primary w-100 mt-2 position-relative" [routerLink]="['/panier']">
+      Voir Panier
+    </button>
+  </div>
+
+  <!-- Catalogue -->
+  <div class="row g-4">
+    <div class="col-md-4 mb-4" *ngFor="let v of vinyles() ; trackBy: trackById">
+      <div class="card p-3">
+        <img [src]="v.urlPochette" class="card-img-top" alt="{{ v.titre }}">
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ v.titre }}</h5>
+          <p class="card-text small text-muted">{{ v.description }}</p>
+
+          <div class="mt-auto">
+
+            <!-- Prix -->
+            <p class="fw-bold mb-1">
+              <i class="fa-solid fa-tag me-1"></i>{{ v.prixVinyle }} €
+            </p>
+
+            <!-- Stock restant -->
+            <p class="text-secondary small">
+              <i class="fa-solid fa-boxes-stacked me-1"></i>
+              Stock : {{ v.stock - (v.quantite || 0) }}
+            </p>
+
+            <!-- Ajouter au panier -->
+            <button *ngIf="!v.quantite || v.quantite === 0" class="btn btn-primary w-100 mt-2"
+              (click)="ajouterAuPanier(v)" [disabled]="v.stock === 0">
+              <i class="fa-solid fa-cart-shopping me-2"></i>
+              Ajouter au panier
+            </button>
+
+            <!-- Compteur si déjà présent -->
+            <div *ngIf="v.quantite && v.quantite > 0" class="d-flex align-items-center justify-content-between mt-2">
+              <button class="btn btn-outline-danger" style="width: 3rem" (click)="retirerDuPanier(v)">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+
+              <span class="fw-bold mx-3 fs-5">{{ v.quantite }}</span>
+
+              <button class="btn btn-primary" style="width: 3rem" (click)="ajouterAuPanier(v)"
+                [disabled]="v.quantite >= v.stock">
+                <i class="fa-solid fa-plus"></i>
+              </button>
             </div>
+
+          </div>
         </div>
+      </div>
     </div>
-
-    <div class="container mb-5 col-md-2">
-        <button class="btn btn-primary w-100 mt-2 position-relative" [routerLink]="['/panier']">Voir Panier </button>
-
-    </div>
-
-    <div class="row g-4">
-        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let v of vinyles()">
-            <div class="card h-100 shadow-sm">
-
-                <img [src]="v.urlPochette" [alt]="v.titre" class="card-img-top">
-
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ v.titre }}</h5>
-                    <p class="card-text small text-muted">{{ v.description }}</p>
-
-                    <div class="mt-auto">
-
-                        <!-- Prix -->
-                        <p class="fw-bold mb-1">
-                            <i class="fa-solid fa-tag me-1"></i>{{ v.prixVinyle }} €
-                        </p>
-
-                        <!-- Stock restant -->
-                        <p class="text-secondary small">
-                            <i class="fa-solid fa-boxes-stacked me-1"></i>
-                            Stock : {{ v.stock - (v.quantite || 0) }}
-                        </p>
-
-                        <!-- Ajout si pas encore dans le panier -->
-                        @if (!v.quantite || v.quantite === 0) {
-                        <button class="btn btn-primary w-100 mt-2" (click)="ajouterAuPanier(v)"
-                            [disabled]="v.stock === 0">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>
-                            Ajouter au panier
-                        </button>
-                        }
-
-                        <!-- Compteur si déjà présent -->
-                        @if (v.quantite && v.quantite > 0) {
-                        <div class="d-flex align-items-center justify-content-between mt-2">
-
-                            <!-- Bouton - -->
-                            <button class="btn btn-outline-danger" style="width: 3rem" (click)="retirerDuPanier(v)">
-                                <i class="fa-solid fa-minus"></i>
-                            </button>
-
-                            <!-- Quantité -->
-                            <span class="fw-bold mx-3 fs-5">
-                                {{ v.quantite }}
-                            </span>
-
-                            <!-- Bouton + -->
-                            <button class="btn btn-primary" style="width: 3rem" (click)="ajouterAuPanier(v)"
-                                [disabled]="v.quantite >= v.stock">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-
-                        </div>
-                        }
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
